@@ -1,4 +1,4 @@
-import { Client as Appwrite, Databases, Account } from 'appwrite';
+import { Client, Storage, Account, Permission, Role } from 'appwrite';
 import { Server } from '../utils/config';
 
 let api = {
@@ -8,13 +8,13 @@ let api = {
     if (api.sdk) {
       return api.sdk;
     }
-    let appwrite = new Appwrite();
-    appwrite.setEndpoint(Server.endpoint).setProject(Server.project);
-    const account = new Account(appwrite);
-    const database = new Databases(appwrite, Server.databaseID);
+    let client = new Client();
+    client.setEndpoint(Server.endpoint).setProject(Server.project);
+    const account = new Account(client);
+    const storage = new Storage(client);
 
-    api.sdk = { database, account };
-    return appwrite;
+    api.sdk = { storage, account };
+    return api.sdk;
   },
 
   createAccount: (email, password, name) => {
@@ -29,29 +29,52 @@ let api = {
     return api.provider().account.createEmailSession(email, password);
   },
 
+  getSession(id) {
+    return api.provider().account.getSession(id);
+  },
+
   deleteCurrentSession: () => {
     return api.provider().account.deleteSession('current');
   },
 
-  createDocument: (collectionId, data, read, write) => {
+  createFile: (bucketId, file, permissions) => {
     return api
       .provider()
-      .database.createDocument(collectionId, 'unique()', data, read, write);
+      .storage.createFile(bucketId, 'unique()', file, permissions);
   },
 
-  listDocuments: (collectionId) => {
-    return api.provider().database.listDocuments(collectionId);
+  listFiles: (bucketId) => {
+    return api.provider().storage.listFiles(bucketId);
   },
 
-  updateDocument: (collectionId, documentId, data, read, write) => {
-    return api
-      .provider()
-      .database.updateDocument(collectionId, documentId, data, read, write);
+  getFilePreview: (bucketId, fileId, width) => {
+    return api.provider().storage.getFilePreview(bucketId, fileId, width);
   },
 
-  deleteDocument: (collectionId, documentId) => {
-    return api.provider().database.deleteDocument(collectionId, documentId);
+  getFileView: (bucketId, fileId) => {
+    return api.provider().storage.getFileView(bucketId, fileId);
   },
+
+  makeFilePublic: async (bucketId, fileId, ownerId) => {
+    return api.provider().storage.updateFile(bucketId, fileId, [
+        Permission.read(Role.user(ownerId)),
+        Permission.update(Role.user(ownerId)),
+        Permission.delete(Role.user(ownerId)),
+        Permission.read(Role.any())
+    ]);
+  },
+
+  makeFilePrivate: async (bucketId, fileId, ownerId) => {
+    return api.provider().storage.updateFile(bucketId, fileId, [
+      Permission.read(Role.user(ownerId)),
+      Permission.update(Role.user(ownerId)),
+      Permission.delete(Role.user(ownerId))
+    ]);
+  },
+
+  deleteFile: (bucketId, fileId) => {
+    return api.provider().storage.deleteFile(bucketId, fileId);
+  }
 };
 
 export default api;

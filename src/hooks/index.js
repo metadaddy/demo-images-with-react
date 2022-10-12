@@ -8,7 +8,7 @@ export const FetchState = {
   FETCH_FAILURE: 2,
 };
 
-export const useGetTodos = (stale) => {
+export const useGetFiles = (stale) => {
   const reducer = (state, action) => {
     switch (action.type) {
       case FetchState.FETCH_INIT:
@@ -18,7 +18,7 @@ export const useGetTodos = (stale) => {
           ...state,
           isLoading: false,
           isError: false,
-          todos: action.payload,
+          files: action.payload,
         };
       case FetchState.FETCH_FAILURE:
         return { ...state, isLoading: false, isError: true };
@@ -30,17 +30,20 @@ export const useGetTodos = (stale) => {
   const [state, dispatch] = useReducer(reducer, {
     isLoading: false,
     isError: false,
-    todos: [],
+    files: [],
   });
 
   useEffect(() => {
     let didCancel = false;
-    const getTodos = async () => {
+    const getFiles = async () => {
       dispatch({ type: FetchState.FETCH_INIT });
       try {
-        const data = await api.listDocuments(Server.collectionID);
+        const data = await api.listFiles(Server.bucketID);
+        for (const file of data.files) {
+          file.public = (file["$permissions"].includes("read(\"any\")"));
+        }
         if (!didCancel) {
-          dispatch({ type: FetchState.FETCH_SUCCESS, payload: data.documents });
+          dispatch({ type: FetchState.FETCH_SUCCESS, payload: data.files });
         }
       } catch (e) {
         if (!didCancel) {
@@ -48,7 +51,7 @@ export const useGetTodos = (stale) => {
         }
       }
     };
-    getTodos();
+    getFiles();
     return () => (didCancel = true);
   }, [stale]);
 
@@ -75,14 +78,14 @@ export const useGetUser = () => {
   };
 
   const [state, dispatch] = useReducer(reducer, {
-    isLoading: false,
-    isError: true,
-    data: [],
+    isLoading: true,
+    isError: false,
+    user: null
   });
 
   useEffect(() => {
     let didCancel = false;
-    const getTodos = async () => {
+    const getFiles = async () => {
       dispatch({ type: FetchState.FETCH_INIT });
       try {
         const account = await api.getAccount();
@@ -95,7 +98,7 @@ export const useGetUser = () => {
         }
       }
     };
-    getTodos();
+    getFiles();
     return () => (didCancel = true);
   }, []);
 
