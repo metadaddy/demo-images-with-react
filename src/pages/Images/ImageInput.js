@@ -26,7 +26,7 @@ const ImageInput = ({ setStale }) => {
       setFeedbackMessage("");
       setStale({ stale: true });
     } catch (e) {
-      console.log("Error in adding todo", e);
+      console.log("Error in adding image", e);
     }
   };
 

@@ -11,11 +11,11 @@ function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path="/todos">
+        <Route path="/images">
           {user ? <ImagePage user={user} dispatch={dispatch} /> : isLoading ? <></> : <Redirect to="/login" />}
         </Route>
         <Route path="/login">
-          {user ? <Redirect to="/todos" /> : isLoading ? <></> : <Login dispatch={dispatch}/>}
+          {user ? <Redirect to="/images" /> : isLoading ? <></> : <Login dispatch={dispatch}/>}
         </Route>
         <Route exact path="/">
           <Landing />
