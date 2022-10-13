@@ -93,9 +93,13 @@ Click **Select Image for Upload**, select an image from your local drive, then c
 
 In the Appwrite console, go to your bucket and click the **Files** tab; you will see your file listed there. Click the filename, and you will see that the file has read, update and delete permissions for your user.
 
+<img width="957" alt="FilePermissions" src="https://user-images.githubusercontent.com/723517/195693797-06369969-8902-44ee-96bb-f3630d5c005d.png">
+
 Back in the app, click the 🔓 icon to make the image public. The preview will move to the 'Public Images' section.
 
 Back in the Appwrite console, refresh the page in the browser and click the filename again. You will see that the file has gained the read permission for anyone - it is now publicly readable.
+
+<img width="960" alt="FilePermissions2" src="https://user-images.githubusercontent.com/723517/195693834-337bc5f6-0a15-4e40-97ab-22e31bc564b2.png">
 
 In the app, upload a second image, leaving it in the private section, then logout, sign up as a new user, and you will see the first user's public image, but not their private image.
 
