@@ -17,7 +17,7 @@ We need to make a few configuration changes to your Appwrite server.
 
 1. (Optional) Configure a Storage in Appwrite
 
-    Although you can deploy the app with the default Local storage, this app is intended to allow you to experiment with other Appwrite Storage adapters. For example, you could [configure Backblaze B2 Cloud Storage to store files in the cloud](https://medium.com/appwrite-io/appwrite-storage-meets-backblaze-b2-c0b3a9d303f3).
+    Although you can deploy the app with the default Local storage, this app is intended to allow you to experiment with other Appwrite Storage adapters. For example, you could [configure Backblaze B2 Cloud Storage to store files in the cloud](https://dev.to/appwrite/appwrite-storage-meets-backblaze-b2-4m2e).
     
     If you do configure a Storage, remember to restart Appwrite after editing your .env file. This can be easily done by running the following command.
     
